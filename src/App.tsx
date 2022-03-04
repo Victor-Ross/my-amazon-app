@@ -1,14 +1,7 @@
-import './global.css';
+import { Router } from './router';
 
 function App() {
-  return (
-    <div className="app">
-      <header className="app-header">
-        <a href="/">amazona</a>
-      </header>
-      <main>list products</main>
-    </div>
-  );
+  return <Router />;
 }
 
 export default App;
