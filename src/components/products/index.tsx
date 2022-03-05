@@ -1,8 +1,11 @@
 import { useEffect, useReducer } from 'react';
-import { Link } from 'react-router-dom';
-import logger from 'use-reducer-logger';
+import Col from 'react-bootstrap/Col';
+import Row from 'react-bootstrap/Row';
+import { Helmet } from 'react-helmet-async';
 
 import { api } from '../../services/api';
+
+import { Product } from '../product';
 
 import styles from './styles.module.scss';
 
@@ -15,7 +18,7 @@ type Product = {
   countInStoc: number;
   brand: string;
   rating: number;
-  numReview: number;
+  numReviews: number;
   description: string;
 };
 
@@ -55,18 +58,15 @@ function reducer(state: State, action: Action) {
 }
 
 export function Products() {
-  const [{ products, isLoading, error }, dispatch] = useReducer(
-    logger(reducer),
-    {
-      products: [] as Product[],
-      isLoading: false,
-      error: '',
-    }
-  );
+  const [{ products, isLoading, error }, dispatch] = useReducer(reducer, {
+    products: [] as Product[],
+    isLoading: false,
+    error: '',
+  });
 
   useEffect(() => {
     const fetchData = async () => {
-      dispatch({ type: 'request', isLoading: true });
+      dispatch({ type: 'request' });
       try {
         const response = await api.get('/products');
         dispatch({ type: 'success', products: response.data });
@@ -80,32 +80,21 @@ export function Products() {
 
   return (
     <div className={styles.container}>
+      <Helmet>
+        <title>Amazona</title>
+      </Helmet>
       <h1>Featured products</h1>
       <div className={styles.products}>
         {isLoading ? (
           <h1>Carregando...</h1>
         ) : (
-          products.map((product) => (
-            <div className={styles.productItem} key={product.slug}>
-              <a href={`/product/${product.slug}`}>
-                <img src={product.image} alt={product.name} />
-              </a>
-              <div className={styles.productInfo}>
-                <Link to={`/product/${product.slug}`}>
-                  <p>{product.name}</p>
-                </Link>
-                <p>
-                  <strong>
-                    {new Intl.NumberFormat('pt-BR', {
-                      style: 'currency',
-                      currency: 'BRL',
-                    }).format(product.price)}
-                  </strong>
-                </p>
-                <button type="button">Add to cart</button>
-              </div>
-            </div>
-          ))
+          <Row>
+            {products.map((product) => (
+              <Col sm={6} md={4} lg={3} className="mb-3" key={product.slug}>
+                <Product product={product} />
+              </Col>
+            ))}
+          </Row>
         )}
       </div>
     </div>
