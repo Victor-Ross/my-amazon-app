@@ -6,6 +6,8 @@ import { Helmet } from 'react-helmet-async';
 import { api } from '../../services/api';
 
 import { Product } from '../product';
+import { LoadingBox } from '../loadingBox';
+import { MessageBox } from '../messageBox';
 
 import styles from './styles.module.scss';
 
@@ -49,7 +51,7 @@ function reducer(state: State, action: Action) {
     case 'fail':
       return {
         ...state,
-        loading: false,
+        isLoading: false,
         error: action.error,
       };
     default:
@@ -86,7 +88,9 @@ export function Products() {
       <h1>Featured products</h1>
       <div className={styles.products}>
         {isLoading ? (
-          <h1>Carregando...</h1>
+          <LoadingBox />
+        ) : error ? (
+          <MessageBox variant="danger">{error}</MessageBox>
         ) : (
           <Row>
             {products.map((product) => (

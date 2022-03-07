@@ -11,9 +11,13 @@ import ListGroup from 'react-bootstrap/ListGroup';
 import { Rating } from '../../components/rating';
 
 import { api } from '../../services/api';
+import { getError } from '../../utils/getError';
 
 import styles from './styles.module.scss';
 import { Helmet } from 'react-helmet-async';
+import { MessageBox } from '../../components/messageBox';
+import { LoadingBox } from '../../components/loadingBox';
+import { useStoreContext } from '../../contexts/storeContext';
 
 type ParamsProduct = {
   slug: string;
@@ -55,7 +59,7 @@ function reducer(state: State, action: Action) {
 }
 
 export function ProductPage() {
-  const [{ product, isLoading }, dispatch] = useReducer(reducer, {
+  const [{ product, isLoading, error }, dispatch] = useReducer(reducer, {
     product: {} as Product,
     isLoading: false,
     error: '',
@@ -70,17 +74,25 @@ export function ProductPage() {
         const response = await api.get(`/products/slug/${slug}`);
         dispatch({ type: 'success', product: response.data });
       } catch (error: any) {
-        dispatch({ type: 'fail', error: error.message });
+        dispatch({ type: 'fail', error: getError(error) });
       }
     };
 
     fetchingData();
   }, [slug]);
 
+  const { state, dispatch: ctxDispatch } = useStoreContext();
+
+  function addToCartHandler() {
+    ctxDispatch({ type: 'cart_add_item', item: { ...product, quantity: 1 } });
+  }
+
   return (
     <>
       {isLoading ? (
-        <div>Carregando...</div>
+        <LoadingBox />
+      ) : error ? (
+        <MessageBox variant="danger">{error}</MessageBox>
       ) : (
         <Row>
           <Col md={6}>
@@ -150,6 +162,7 @@ export function ProductPage() {
                         <Button
                           style={{ backgroundColor: '#ffc000', color: '#000' }}
                           variant="primary"
+                          onClick={addToCartHandler}
                         >
                           Add to Cart
                         </Button>

@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { StoreProvider } from './contexts/storeContext';
 import { HelmetProvider } from 'react-helmet-async';
 
 import App from './App';
@@ -9,9 +10,11 @@ import './global.scss';
 
 ReactDOM.render(
   <React.StrictMode>
-    <HelmetProvider>
-      <App />
-    </HelmetProvider>
+    <StoreProvider>
+      <HelmetProvider>
+        <App />
+      </HelmetProvider>
+    </StoreProvider>
   </React.StrictMode>,
   document.getElementById('root')
 );
