@@ -20,8 +20,10 @@ type StoreContextProviderProps = {
 };
 
 type Item = {
+  _id: string;
   name: string;
   slug: string;
+  quantity: number;
 };
 
 type State = {
@@ -32,7 +34,7 @@ type State = {
 
 type Action = {
   type: 'cart_add_item';
-  item: { name: string; slug: string; quantity: number };
+  item: { _id: string; name: string; slug: string; quantity: number };
 };
 
 export const StoreContext = createContext({} as StoreContextProps);
@@ -43,13 +45,17 @@ export function StoreProvider({ children }: StoreContextProviderProps) {
   function reducer(state: State, action: Action) {
     switch (action.type) {
       case 'cart_add_item':
-        return {
-          ...state,
-          cart: {
-            ...state.cart,
-            cartItems: [...state.cart.cartItems, action.item],
-          },
-        };
+        const newItem = action.item;
+        const existItem = state.cart.cartItems.find(
+          (item) => item._id === newItem._id
+        );
+        const cartItems = existItem
+          ? state.cart.cartItems.map((item) =>
+              item._id === existItem._id ? newItem : item
+            )
+          : [...state.cart.cartItems, newItem];
+
+        return { ...state, cart: { ...state.cart, cartItems } };
       default:
         return state;
     }

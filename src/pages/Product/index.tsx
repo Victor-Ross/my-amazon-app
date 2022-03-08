@@ -24,6 +24,7 @@ type ParamsProduct = {
 };
 
 type Product = {
+  _id: string;
   name: string;
   slug: string;
   image: string;
@@ -82,9 +83,21 @@ export function ProductPage() {
   }, [slug]);
 
   const { state, dispatch: ctxDispatch } = useStoreContext();
+  const { cart } = state;
 
-  function addToCartHandler() {
-    ctxDispatch({ type: 'cart_add_item', item: { ...product, quantity: 1 } });
+  async function addToCartHandler() {
+    const existItem = cart.cartItems.find((item) => item._id === product._id);
+
+    const quantity = existItem ? existItem.quantity + 1 : 1;
+
+    const { data } = await api.get(`/products/${product._id}`);
+
+    if (data.countInStock < quantity) {
+      window.alert('Sorry. Product is out of stock');
+      return;
+    }
+
+    ctxDispatch({ type: 'cart_add_item', item: { ...product, quantity } });
   }
 
   return (
