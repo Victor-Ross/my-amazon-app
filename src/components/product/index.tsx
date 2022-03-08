@@ -39,9 +39,9 @@ export function Product({ product }: Product) {
             currency: 'BRL',
           }).format(product.price)}
         </Card.Text>
-        <Button style={{ backgroundColor: '#f0c040', color: '#000' }}>
-          Add to Cart
-        </Button>
+        <Link to={`product/${product.slug}`}>
+          <Button className="buttonsDefaultColors">Add to Cart</Button>
+        </Link>
       </Card.Body>
     </Card>
   );

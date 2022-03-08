@@ -1,5 +1,5 @@
 import { useEffect, useReducer } from 'react';
-import { useParams } from 'react-router-dom';
+import { Navigate, useNavigate, useParams } from 'react-router-dom';
 
 import Badge from 'react-bootstrap/Badge';
 import Button from 'react-bootstrap/Button';
@@ -60,6 +60,8 @@ function reducer(state: State, action: Action) {
 }
 
 export function ProductPage() {
+  const navigate = useNavigate();
+
   const [{ product, isLoading, error }, dispatch] = useReducer(reducer, {
     product: {} as Product,
     isLoading: false,
@@ -98,6 +100,8 @@ export function ProductPage() {
     }
 
     ctxDispatch({ type: 'cart_add_item', item: { ...product, quantity } });
+
+    navigate('/cart');
   }
 
   return (

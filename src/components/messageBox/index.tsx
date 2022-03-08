@@ -2,7 +2,7 @@ import { ReactNode } from 'react';
 import { Alert } from 'react-bootstrap';
 
 interface MessageBoxProps {
-  variant: string;
+  variant?: string;
   children: ReactNode;
 }
 

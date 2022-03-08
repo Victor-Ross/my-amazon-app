@@ -24,6 +24,9 @@ type Item = {
   name: string;
   slug: string;
   quantity: number;
+  image: string;
+  price: number;
+  countInStock: number;
 };
 
 type State = {
@@ -34,7 +37,7 @@ type State = {
 
 type Action = {
   type: 'cart_add_item';
-  item: { _id: string; name: string; slug: string; quantity: number };
+  item: Item;
 };
 
 export const StoreContext = createContext({} as StoreContextProps);

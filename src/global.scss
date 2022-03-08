@@ -36,3 +36,16 @@ a {
 .site-container {
   min-height: 100vh;
 }
+
+.buttonsDefaultColors {
+  background-color: #f0c040;
+  color: #000;
+
+  transition: filter 0.2s;
+
+  &:hover {
+    background-color: #f0c040;
+    color: #000;
+    filter: brightness(0.9);
+  }
+}
