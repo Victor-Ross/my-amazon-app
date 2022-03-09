@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { BrowserRouter } from 'react-router-dom';
 import { StoreProvider } from './contexts/storeContext';
 import { HelmetProvider } from 'react-helmet-async';
 
@@ -10,11 +11,13 @@ import './global.scss';
 
 ReactDOM.render(
   <React.StrictMode>
-    <StoreProvider>
-      <HelmetProvider>
-        <App />
-      </HelmetProvider>
-    </StoreProvider>
+    <BrowserRouter>
+      <StoreProvider>
+        <HelmetProvider>
+          <App />
+        </HelmetProvider>
+      </StoreProvider>
+    </BrowserRouter>
   </React.StrictMode>,
   document.getElementById('root')
 );

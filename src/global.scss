@@ -48,4 +48,9 @@ a {
     color: #000;
     filter: brightness(0.9);
   }
+
+  &:disabled {
+    background-color: #f0c040;
+    color: #000;
+  }
 }

@@ -6,16 +6,18 @@ import Button from 'react-bootstrap/Button';
 import { Rating } from '../rating';
 
 import styles from './styles.module.scss';
+import { useStoreContext } from '../../contexts/storeContext';
 
 type Product = {
   product: {
+    _id: string;
     name: string;
     slug: string;
+    quantity: number;
     category: string;
     image: string;
     price: number;
-    countInStoc: number;
-    brand: string;
+    countInStock: number;
     rating: number;
     numReviews: number;
     description: string;
@@ -23,6 +25,8 @@ type Product = {
 };
 
 export function Product({ product }: Product) {
+  const { addProductFromHomeScreenCartHandler } = useStoreContext();
+
   return (
     <Card className={styles.productItem}>
       <Link to={`/product/${product.slug}`}>
@@ -39,9 +43,18 @@ export function Product({ product }: Product) {
             currency: 'BRL',
           }).format(product.price)}
         </Card.Text>
-        <Link to={`product/${product.slug}`}>
-          <Button className="buttonsDefaultColors">Add to Cart</Button>
-        </Link>
+        {product.countInStock === 0 ? (
+          <Button variant="secondary" disabled>
+            Out of Stock
+          </Button>
+        ) : (
+          <Button
+            className="buttonsDefaultColors"
+            onClick={() => addProductFromHomeScreenCartHandler(product)}
+          >
+            Add to Cart
+          </Button>
+        )}
       </Card.Body>
     </Card>
   );

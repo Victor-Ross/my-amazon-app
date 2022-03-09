@@ -12,12 +12,14 @@ import { MessageBox } from '../messageBox';
 import styles from './styles.module.scss';
 
 type Product = {
+  _id: string;
   name: string;
   slug: string;
+  quantity: number;
   category: string;
   image: string;
   price: number;
-  countInStoc: number;
+  countInStock: number;
   brand: string;
   rating: number;
   numReviews: number;

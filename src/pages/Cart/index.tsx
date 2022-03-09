@@ -12,7 +12,8 @@ import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
 
 export function CartPage() {
-  const { state, dispatch: cartCtxDispatch } = useStoreContext();
+  const { state, updateCartHandler, removeProductHandler, checkoutHandler } =
+    useStoreContext();
   const {
     cart: { cartItems },
   } = state;
@@ -47,12 +48,21 @@ export function CartPage() {
                       <Link to={`/product/${item.slug}`}>{item.name}</Link>
                     </Col>
                     <Col md="3">
-                      <Button variant="light" disabled={item.quantity === 1}>
+                      <Button
+                        variant="light"
+                        onClick={() =>
+                          updateCartHandler(item, item.quantity - 1)
+                        }
+                        disabled={item.quantity === 1}
+                      >
                         <i className="fas fa-minus-circle" />
                       </Button>{' '}
                       <span>{item.quantity}</span>{' '}
                       <Button
                         variant="light"
+                        onClick={() =>
+                          updateCartHandler(item, item.quantity + 1)
+                        }
                         disabled={item.quantity === item.countInStock}
                       >
                         <i className="fas fa-plus-circle" />
@@ -66,7 +76,10 @@ export function CartPage() {
                     </Col>
                     <Col md="2">
                       <Button variant="light">
-                        <i className="fas fa-trash" />
+                        <i
+                          className="fas fa-trash"
+                          onClick={() => removeProductHandler(item)}
+                        />
                       </Button>
                     </Col>
                   </Row>
@@ -99,6 +112,7 @@ export function CartPage() {
                     <Button
                       className="buttonsDefaultColors"
                       type="button"
+                      onClick={checkoutHandler}
                       disabled={cartItems.length === 0}
                     >
                       Proceed to Checkout
