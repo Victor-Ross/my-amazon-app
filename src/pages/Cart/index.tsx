@@ -18,6 +18,8 @@ export function CartPage() {
     cart: { cartItems },
   } = state;
 
+  const palavra = 'lalala';
+
   return (
     <div>
       <Helmet>
