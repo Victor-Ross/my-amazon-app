@@ -12,7 +12,7 @@ import { MessageBox } from '../messageBox';
 import styles from './styles.module.scss';
 
 type Product = {
-  _id: string;
+  id: string;
   name: string;
   slug: string;
   quantity: number;

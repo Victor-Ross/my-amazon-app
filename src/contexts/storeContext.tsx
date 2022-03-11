@@ -26,7 +26,7 @@ type StoreContextProviderProps = {
 };
 
 type Product = {
-  _id: string;
+  id: string;
   name: string;
   slug: string;
   quantity: number;
@@ -71,11 +71,11 @@ export function StoreProvider({ children }: StoreContextProviderProps) {
       case 'cart_add_item': {
         const newItem = action.item;
         const existItem = state.cart.cartItems.find(
-          (item) => item._id === newItem._id
+          (item) => item.id === newItem.id
         );
         const cartItems = existItem
           ? state.cart.cartItems.map((item) =>
-              item._id === existItem._id ? newItem : item
+              item.id === existItem.id ? newItem : item
             )
           : [...state.cart.cartItems, newItem];
 
@@ -85,7 +85,7 @@ export function StoreProvider({ children }: StoreContextProviderProps) {
       }
       case 'cart_remove_item': {
         const cartItems = state.cart.cartItems.filter(
-          (item) => item._id !== action.item._id
+          (item) => item.id !== action.item.id
         );
         localStorage.setItem('cartItems', JSON.stringify(cartItems));
         return { ...state, cart: { ...state.cart, cartItems } };
@@ -96,7 +96,7 @@ export function StoreProvider({ children }: StoreContextProviderProps) {
   }
 
   async function updateCartHandler(product: Product, quantity: number) {
-    const response = await api.get(`/products/${product._id}`);
+    const response = await api.get(`/products/${product.id}`);
     const data: Product = response.data;
 
     if (data.countInStock < quantity) {
@@ -108,11 +108,11 @@ export function StoreProvider({ children }: StoreContextProviderProps) {
 
   async function addProductFromHomeScreenCartHandler(product: Product) {
     const existItem = state.cart.cartItems.find(
-      (item) => item._id === product._id
+      (item) => item.id === product.id
     );
     const quantity = existItem ? existItem.quantity + 1 : 1;
 
-    const response = await api.get(`/products/${product._id}`);
+    const response = await api.get(`/products/${product.id}`);
     const data: Product = response.data;
 
     if (data.countInStock < quantity) {

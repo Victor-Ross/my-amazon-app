@@ -18,8 +18,6 @@ export function CartPage() {
     cart: { cartItems },
   } = state;
 
-  const palavra = 'lalala';
-
   return (
     <div>
       <Helmet>
@@ -35,7 +33,7 @@ export function CartPage() {
           ) : (
             <ListGroup>
               {cartItems.map((item) => (
-                <ListGroup.Item key={item._id}>
+                <ListGroup.Item key={item.id}>
                   <Row className="align-items-center">
                     <Col
                       md="4"

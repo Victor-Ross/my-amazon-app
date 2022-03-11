@@ -24,7 +24,7 @@ type ParamsProduct = {
 };
 
 type Product = {
-  _id: string;
+  id: string;
   name: string;
   slug: string;
   image: string;
@@ -88,11 +88,11 @@ export function ProductPage() {
   const { cart } = state;
 
   async function addToCartHandler() {
-    const existItem = cart.cartItems.find((item) => item._id === product._id);
+    const existItem = cart.cartItems.find((item) => item.id === product.id);
 
     const quantity = existItem ? existItem.quantity + 1 : 1;
 
-    const { data } = await api.get(`/products/${product._id}`);
+    const { data } = await api.get(`/products/${product.id}`);
 
     if (data.countInStock < quantity) {
       window.alert('Sorry. Product is out of stock');

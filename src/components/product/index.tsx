@@ -10,7 +10,7 @@ import { useStoreContext } from '../../contexts/storeContext';
 
 type Product = {
   product: {
-    _id: string;
+    id: string;
     name: string;
     slug: string;
     quantity: number;
