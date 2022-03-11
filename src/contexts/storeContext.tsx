@@ -13,12 +13,14 @@ type StoreContextProps = {
     cart: {
       cartItems: Product[];
     };
+    userInfo: User | null;
   };
   dispatch: Dispatch<Action>;
   updateCartHandler: (product: Product, quantity: number) => void;
   removeProductHandler: (product: Product) => void;
   checkoutHandler: () => void;
   addProductFromHomeScreenCartHandler: (product: Product) => void;
+  signOutHandler: () => void;
 };
 
 type StoreContextProviderProps = {
@@ -35,10 +37,17 @@ type Product = {
   countInStock: number;
 };
 
+type User = {
+  name: string;
+  email: string;
+  password: string;
+};
+
 type State = {
   cart: {
     cartItems: Product[];
   };
+  userInfo: User | null;
 };
 
 type Action =
@@ -49,12 +58,22 @@ type Action =
   | {
       type: 'cart_remove_item';
       item: Product;
+    }
+  | {
+      type: 'user_signin';
+      user: User;
+    }
+  | {
+      type: 'user_signout';
     };
 
 export const StoreContext = createContext({} as StoreContextProps);
 
 export function StoreProvider({ children }: StoreContextProviderProps) {
   const initialState = {
+    userInfo: localStorage.getItem('userInfo')
+      ? JSON.parse(String(localStorage.getItem('userInfo')))
+      : null,
     cart: {
       cartItems: localStorage.getItem('cartItems')
         ? JSON.parse(String(localStorage.getItem('cartItems')))
@@ -89,6 +108,12 @@ export function StoreProvider({ children }: StoreContextProviderProps) {
         );
         localStorage.setItem('cartItems', JSON.stringify(cartItems));
         return { ...state, cart: { ...state.cart, cartItems } };
+      }
+      case 'user_signin': {
+        return { ...state, userInfo: action.user };
+      }
+      case 'user_signout': {
+        return { ...state, userInfo: null };
       }
       default:
         return state;
@@ -131,6 +156,11 @@ export function StoreProvider({ children }: StoreContextProviderProps) {
     navigate('/signin?redirect=/shipping');
   }
 
+  const signOutHandler = () => {
+    dispatch({ type: 'user_signout' });
+    localStorage.removeItem('userInfo');
+  };
+
   return (
     <StoreContext.Provider
       value={{
@@ -140,6 +170,7 @@ export function StoreProvider({ children }: StoreContextProviderProps) {
         removeProductHandler,
         checkoutHandler,
         addProductFromHomeScreenCartHandler,
+        signOutHandler,
       }}
     >
       {children}
