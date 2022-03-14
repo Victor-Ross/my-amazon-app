@@ -12,6 +12,7 @@ type StoreContextProps = {
   state: {
     cart: {
       cartItems: Product[];
+      shippingAddress: Address;
     };
     userInfo: User | null;
   };
@@ -43,9 +44,18 @@ type User = {
   password: string;
 };
 
+type Address = {
+  fullName: string;
+  address: string;
+  city: string;
+  postalCode: string;
+  country: string;
+};
+
 type State = {
   cart: {
     cartItems: Product[];
+    shippingAddress: Address;
   };
   userInfo: User | null;
 };
@@ -65,6 +75,10 @@ type Action =
     }
   | {
       type: 'user_signout';
+    }
+  | {
+      type: 'save_shipping_address';
+      shippingAddress: Address;
     };
 
 export const StoreContext = createContext({} as StoreContextProps);
@@ -78,6 +92,9 @@ export function StoreProvider({ children }: StoreContextProviderProps) {
       cartItems: localStorage.getItem('cartItems')
         ? JSON.parse(String(localStorage.getItem('cartItems')))
         : [],
+      shippingAddress: localStorage.getItem('shippingAddress')
+        ? JSON.parse(String(localStorage.getItem('shippingAddress')))
+        : null,
     },
   };
 
@@ -113,7 +130,23 @@ export function StoreProvider({ children }: StoreContextProviderProps) {
         return { ...state, userInfo: action.user };
       }
       case 'user_signout': {
-        return { ...state, userInfo: null };
+        return {
+          ...state,
+          userInfo: null,
+          cart: {
+            cartItems: [] as unknown as Product[],
+            shippingAddress: {} as Address,
+          },
+        };
+      }
+      case 'save_shipping_address': {
+        return {
+          ...state,
+          cart: {
+            ...state.cart,
+            shippingAddress: action.shippingAddress,
+          },
+        };
       }
       default:
         return state;
@@ -159,6 +192,7 @@ export function StoreProvider({ children }: StoreContextProviderProps) {
   const signOutHandler = () => {
     dispatch({ type: 'user_signout' });
     localStorage.removeItem('userInfo');
+    localStorage.removeItem('shippingAddress');
   };
 
   return (

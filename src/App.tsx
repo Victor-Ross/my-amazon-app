@@ -9,6 +9,7 @@ import { Footer } from './components/footer';
 import { Header } from './components/header';
 import { Products } from './components/products';
 import { Signin } from './pages/SigninPage';
+import { ShippingAddressPage } from './pages/Shipping';
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
             <Route path="/product/:slug" element={<ProductPage />} />
             <Route path="/cart" element={<CartPage />} />
             <Route path="/signin" element={<Signin />} />
+            <Route path="/shipping" element={<ShippingAddressPage />} />
           </Routes>
         </Container>
       </main>
