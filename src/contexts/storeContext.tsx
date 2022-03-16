@@ -1,20 +1,22 @@
 import {
   createContext,
-  Dispatch,
   ReactNode,
   useContext,
   useReducer,
+  useState,
+  Dispatch,
 } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { api } from '../services/api';
 
 type StoreContextProps = {
   state: {
+    userInfo: User | null;
     cart: {
       cartItems: Product[];
       shippingAddress: Address;
+      paymentMethod: string | null;
     };
-    userInfo: User | null;
   };
   dispatch: Dispatch<Action>;
   updateCartHandler: (product: Product, quantity: number) => void;
@@ -53,11 +55,12 @@ type Address = {
 };
 
 type State = {
+  userInfo: User | null;
   cart: {
     cartItems: Product[];
     shippingAddress: Address;
+    paymentMethod: string | null;
   };
-  userInfo: User | null;
 };
 
 type Action =
@@ -79,12 +82,16 @@ type Action =
   | {
       type: 'save_shipping_address';
       shippingAddress: Address;
+    }
+  | {
+      type: 'save_payment_method';
+      paymentMethod: string | null;
     };
 
 export const StoreContext = createContext({} as StoreContextProps);
 
 export function StoreProvider({ children }: StoreContextProviderProps) {
-  const initialState = {
+  const initialState: State = {
     userInfo: localStorage.getItem('userInfo')
       ? JSON.parse(String(localStorage.getItem('userInfo')))
       : null,
@@ -95,6 +102,9 @@ export function StoreProvider({ children }: StoreContextProviderProps) {
       shippingAddress: localStorage.getItem('shippingAddress')
         ? JSON.parse(String(localStorage.getItem('shippingAddress')))
         : null,
+      paymentMethod: localStorage.getItem('paymentMethod')
+        ? localStorage.getItem('paymentMethod')
+        : '',
     },
   };
 
@@ -136,6 +146,7 @@ export function StoreProvider({ children }: StoreContextProviderProps) {
           cart: {
             cartItems: [] as unknown as Product[],
             shippingAddress: {} as Address,
+            paymentMethod: '',
           },
         };
       }
@@ -145,6 +156,15 @@ export function StoreProvider({ children }: StoreContextProviderProps) {
           cart: {
             ...state.cart,
             shippingAddress: action.shippingAddress,
+          },
+        };
+      }
+      case 'save_payment_method': {
+        return {
+          ...state,
+          cart: {
+            ...state.cart,
+            paymentMethod: action.paymentMethod,
           },
         };
       }
@@ -193,6 +213,7 @@ export function StoreProvider({ children }: StoreContextProviderProps) {
     dispatch({ type: 'user_signout' });
     localStorage.removeItem('userInfo');
     localStorage.removeItem('shippingAddress');
+    localStorage.removeItem('paymentMethod');
   };
 
   return (

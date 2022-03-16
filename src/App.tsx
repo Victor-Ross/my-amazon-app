@@ -9,7 +9,9 @@ import { Footer } from './components/footer';
 import { Header } from './components/header';
 import { Products } from './components/products';
 import { Signin } from './pages/SigninPage';
+import { Signup } from './pages/Signup';
 import { ShippingAddressPage } from './pages/Shipping';
+import { PaymentMethod } from './pages/PaymentMethod';
 
 function App() {
   return (
@@ -22,7 +24,9 @@ function App() {
             <Route path="/product/:slug" element={<ProductPage />} />
             <Route path="/cart" element={<CartPage />} />
             <Route path="/signin" element={<Signin />} />
+            <Route path="/signup" element={<Signup />} />
             <Route path="/shipping" element={<ShippingAddressPage />} />
+            <Route path="/payment" element={<PaymentMethod />} />
           </Routes>
         </Container>
       </main>
