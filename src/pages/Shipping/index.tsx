@@ -14,14 +14,18 @@ export function ShippingAddressPage() {
   const { shippingAddress } = storeState.cart;
 
   const [fullName, setFullName] = useState<string>(
-    shippingAddress.fullName || ''
+    shippingAddress?.fullName || ''
   );
-  const [address, setAddress] = useState<string>(shippingAddress.address || '');
-  const [city, setCity] = useState<string>(shippingAddress.city || '');
+  const [address, setAddress] = useState<string>(
+    shippingAddress?.address || ''
+  );
+  const [city, setCity] = useState<string>(shippingAddress?.city || '');
   const [postalCode, setPostalCode] = useState<string>(
-    shippingAddress.postalCode || ''
+    shippingAddress?.postalCode || ''
   );
-  const [country, setCountry] = useState<string>(shippingAddress.country || '');
+  const [country, setCountry] = useState<string>(
+    shippingAddress?.country || ''
+  );
 
   useEffect(() => {
     if (!storeState.userInfo) {

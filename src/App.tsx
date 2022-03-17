@@ -12,6 +12,7 @@ import { Signin } from './pages/SigninPage';
 import { Signup } from './pages/Signup';
 import { ShippingAddressPage } from './pages/Shipping';
 import { PaymentMethod } from './pages/PaymentMethod';
+import PlaceOrder from './pages/PlaceOrder';
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
             <Route path="/signup" element={<Signup />} />
             <Route path="/shipping" element={<ShippingAddressPage />} />
             <Route path="/payment" element={<PaymentMethod />} />
+            <Route path="/placeorder" element={<PlaceOrder />} />
           </Routes>
         </Container>
       </main>

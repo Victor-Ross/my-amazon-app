@@ -99,11 +99,18 @@ export function CartPage() {
                       (total, cartItem) => total + cartItem.quantity,
                       0
                     )}{' '}
-                    items) : R$&nbsp;
-                    {cartItems.reduce(
-                      (total, cartItem) =>
-                        total + cartItem.price * cartItem.quantity,
-                      0
+                    items):
+                    <br />
+                    <br />
+                    {new Intl.NumberFormat('pt-BR', {
+                      style: 'currency',
+                      currency: 'BRL',
+                    }).format(
+                      cartItems.reduce(
+                        (total, cartItem) =>
+                          total + cartItem.price * cartItem.quantity,
+                        0
+                      )
                     )}
                   </h3>
                 </ListGroup.Item>

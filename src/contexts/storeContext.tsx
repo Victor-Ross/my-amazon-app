@@ -3,7 +3,6 @@ import {
   ReactNode,
   useContext,
   useReducer,
-  useState,
   Dispatch,
 } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -14,10 +13,11 @@ type StoreContextProps = {
     userInfo: User | null;
     cart: {
       cartItems: Product[];
-      shippingAddress: Address;
-      paymentMethod: string | null;
+      shippingAddress: Address | null;
+      paymentMethod: string;
     };
   };
+  finishedShopping: () => FinishedShopping;
   dispatch: Dispatch<Action>;
   updateCartHandler: (product: Product, quantity: number) => void;
   removeProductHandler: (product: Product) => void;
@@ -44,6 +44,7 @@ type User = {
   name: string;
   email: string;
   password: string;
+  token: string;
 };
 
 type Address = {
@@ -58,8 +59,8 @@ type State = {
   userInfo: User | null;
   cart: {
     cartItems: Product[];
-    shippingAddress: Address;
-    paymentMethod: string | null;
+    shippingAddress: Address | null;
+    paymentMethod: string;
   };
 };
 
@@ -71,6 +72,9 @@ type Action =
   | {
       type: 'cart_remove_item';
       item: Product;
+    }
+  | {
+      type: 'cart_clear';
     }
   | {
       type: 'user_signin';
@@ -85,8 +89,15 @@ type Action =
     }
   | {
       type: 'save_payment_method';
-      paymentMethod: string | null;
+      paymentMethod: string;
     };
+
+type FinishedShopping = {
+  itemsPrice: number;
+  shippingPrice: number;
+  taxPrice: number;
+  totalPrice: number;
+};
 
 export const StoreContext = createContext({} as StoreContextProps);
 
@@ -103,7 +114,7 @@ export function StoreProvider({ children }: StoreContextProviderProps) {
         ? JSON.parse(String(localStorage.getItem('shippingAddress')))
         : null,
       paymentMethod: localStorage.getItem('paymentMethod')
-        ? localStorage.getItem('paymentMethod')
+        ? String(localStorage.getItem('paymentMethod'))
         : '',
     },
   };
@@ -135,6 +146,9 @@ export function StoreProvider({ children }: StoreContextProviderProps) {
         );
         localStorage.setItem('cartItems', JSON.stringify(cartItems));
         return { ...state, cart: { ...state.cart, cartItems } };
+      }
+      case 'cart_clear': {
+        return { ...state, cart: { ...state.cart, cartItems: [] } };
       }
       case 'user_signin': {
         return { ...state, userInfo: action.user };
@@ -216,10 +230,31 @@ export function StoreProvider({ children }: StoreContextProviderProps) {
     localStorage.removeItem('paymentMethod');
   };
 
+  function finishedShopping(): FinishedShopping {
+    const round2 = (num: number) =>
+      Math.round(num * 100 + Number.EPSILON) / 100;
+
+    const itemsPrice = round2(
+      state.cart.cartItems.reduce((item, total) => item + total.price, 0)
+    );
+
+    const shippingPrice = itemsPrice > 100 ? round2(0) : round2(10);
+    const taxPrice = round2(0.15 * itemsPrice);
+    const totalPrice = itemsPrice + shippingPrice + taxPrice;
+
+    return {
+      itemsPrice,
+      shippingPrice,
+      taxPrice,
+      totalPrice,
+    };
+  }
+
   return (
     <StoreContext.Provider
       value={{
         state,
+        finishedShopping,
         dispatch,
         updateCartHandler,
         removeProductHandler,

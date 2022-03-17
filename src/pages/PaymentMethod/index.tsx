@@ -24,20 +24,19 @@ export function PaymentMethod() {
   const submitHandler = (event: FormEvent) => {
     event.preventDefault();
 
-    storeDispatch({ type: 'save_payment_method', paymentMethod });
+    storeDispatch({
+      type: 'save_payment_method',
+      paymentMethod: paymentMethodName,
+    });
     localStorage.setItem('paymentMethod', paymentMethodName);
     navigate('/placeorder');
   };
 
   useEffect(() => {
-    if (!shippingAddress.address) {
+    if (!shippingAddress?.address) {
       navigate('/shipping');
     }
   }, [shippingAddress, navigate]);
-
-  useEffect(() => {
-    console.log('lalla', paymentMethodName);
-  }, [paymentMethodName]);
 
   return (
     <>
@@ -69,7 +68,9 @@ export function PaymentMethod() {
                 onChange={(e) => setPaymentMethodName(e.target.value)}
               />
             </div>
-            <Button type="submit">Continue</Button>
+            <Button className="buttonsDefaultColors" type="submit">
+              Continue
+            </Button>
           </Form>
         </Container>
       </div>
