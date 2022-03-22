@@ -17,46 +17,49 @@ export function Header() {
     <>
       <ToastContainer position="bottom-center" limit={1} />
       <header>
-        <Navbar bg="dark" variant="dark">
+        <Navbar bg="dark" variant="dark" expand="lg">
           <Container>
             <Nav.Link as={Link} to="/">
               <Navbar.Brand>amazona</Navbar.Brand>
             </Nav.Link>
-            <Nav className="me-auto">
-              <Link to="/cart" className="nav-link">
-                Cart
-                {cart.cartItems.length > 0 && (
-                  <Badge pill bg="danger">
-                    {cart.cartItems.reduce(
-                      (total, cartItem) => total + cartItem.quantity,
-                      0
-                    )}
-                  </Badge>
-                )}
-              </Link>
-              {userInfo ? (
-                <NavDropdown title={userInfo.name} id="basic-nav-dropdown">
-                  <NavDropdown.Item as={Link} to="/profile">
-                    User Profile
-                  </NavDropdown.Item>
-                  <NavDropdown.Item as={Link} to="/orderhistory">
-                    Order History
-                  </NavDropdown.Item>
-                  <NavDropdown.Divider />
-                  <Link
-                    to="#signout"
-                    className="dropdown-item"
-                    onClick={signOutHandler}
-                  >
-                    Sign Out
-                  </Link>
-                </NavDropdown>
-              ) : (
-                <Link className="nav-link" to="/signin">
-                  Sign In
+            <Navbar.Toggle aria-controls="basic-navbar-nav" />
+            <Navbar.Collapse id="basic-navbar-nav">
+              <Nav className="me-auto w-100 justify-content-end">
+                <Link to="/cart" className="nav-link">
+                  Cart
+                  {cart.cartItems.length > 0 && (
+                    <Badge pill bg="danger">
+                      {cart.cartItems.reduce(
+                        (total, cartItem) => total + cartItem.quantity,
+                        0
+                      )}
+                    </Badge>
+                  )}
                 </Link>
-              )}
-            </Nav>
+                {userInfo ? (
+                  <NavDropdown title={userInfo.name} id="basic-nav-dropdown">
+                    <NavDropdown.Item as={Link} to="/profile">
+                      User Profile
+                    </NavDropdown.Item>
+                    <NavDropdown.Item as={Link} to="/orderhistory">
+                      Order History
+                    </NavDropdown.Item>
+                    <NavDropdown.Divider />
+                    <Link
+                      to="#signout"
+                      className="dropdown-item"
+                      onClick={signOutHandler}
+                    >
+                      Sign Out
+                    </Link>
+                  </NavDropdown>
+                ) : (
+                  <Link className="nav-link" to="/signin">
+                    Sign In
+                  </Link>
+                )}
+              </Nav>
+            </Navbar.Collapse>
           </Container>
         </Navbar>
       </header>

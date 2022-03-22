@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import { BrowserRouter } from 'react-router-dom';
 import { StoreProvider } from './contexts/storeContext';
 import { HelmetProvider } from 'react-helmet-async';
+import { PayPalScriptProvider } from '@paypal/react-paypal-js';
 
 import App from './App';
 
@@ -15,7 +16,12 @@ ReactDOM.render(
     <BrowserRouter>
       <StoreProvider>
         <HelmetProvider>
-          <App />
+          <PayPalScriptProvider
+            options={{ 'client-id': 'sb' }}
+            deferLoading={true}
+          >
+            <App />
+          </PayPalScriptProvider>
         </HelmetProvider>
       </StoreProvider>
     </BrowserRouter>
