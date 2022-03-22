@@ -228,6 +228,7 @@ export function StoreProvider({ children }: StoreContextProviderProps) {
     localStorage.removeItem('userInfo');
     localStorage.removeItem('shippingAddress');
     localStorage.removeItem('paymentMethod');
+    window.location.href = '/signin';
   };
 
   function finishedShopping(): FinishedShopping {
